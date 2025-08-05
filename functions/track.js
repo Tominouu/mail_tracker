@@ -1,6 +1,3 @@
-const fs = require("fs");
-const path = require("path");
-
 exports.handler = async (event, context) => {
   const uid = event.queryStringParameters.uid || "unknown";
   const ip = event.headers["x-forwarded-for"] || "unknown";
@@ -14,9 +11,8 @@ exports.handler = async (event, context) => {
   ➤ Date : ${timestamp}
   `);
 
-  // Renvoie une image PNG invisible
-  const imagePath = path.join(__dirname, "..", "public", "pixel.png");
-  const imageBuffer = fs.readFileSync(imagePath);
+  // Image PNG 1x1 transparent (base64)
+  const pixelBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/P9fDDwAAAABJRU5ErkJggg==";
 
   return {
     statusCode: 200,
@@ -24,7 +20,7 @@ exports.handler = async (event, context) => {
       "Content-Type": "image/png",
       "Cache-Control": "no-store",
     },
-    body: imageBuffer.toString("base64"),
+    body: pixelBase64,
     isBase64Encoded: true,
   };
 };
